@@ -1,6 +1,6 @@
 <template>
   <header class="header">
-    <img src="/myfav-tefilms/public/logo.svg" alt="logo" class="header-logo">
+    <img src="../public/logo.svg" alt="logo" class="header-logo">
     <h2>My Favorite Movies</h2>
   </header>
 </template>
