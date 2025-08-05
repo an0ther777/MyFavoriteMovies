@@ -1,14 +1,38 @@
 <template>
+<main>
   <header class="header">
     <img src="../public/logo.svg" alt="logo" class="header-logo">
     <h2>My Favorite Movies</h2>
   </header>
+  <div class="tabs">
+      <button :class="['btn', { btn_green: movieStore.activeTab === 1 }]">
+        Favorite
+      </button>
+      <button :class="['btn', { btn_green: movieStore.activeTab === 2 }]">
+        Search
+      </button>
+  </div>
+  <div class="movies" v-if="movieStore.activeTab === 1">
+    <h3>All Movies</h3>
+    <Movie v-for="movie of movieStore.movies" :key="movie.id" 
+    :movie='movie'/>
+  </div>
+  <div class="search" v-else>Search</div>
+</main>
 </template>
 
 <script>
-  export default {
-    
+import Movie from './components/Movie.vue';
+import { defineComponent } from 'vue';
+import { useMovieStore } from './stores/MovieStore';
+
+export default defineComponent({
+  components: { Movie },
+  setup() {
+    const movieStore = useMovieStore();
+    return { movieStore };
   }
+});
 </script>
 
 <style  scoped>
@@ -45,3 +69,31 @@
   margin-bottom: 30px;
 }
 </style>
+<!-- <template>
+  <header class="header">
+    <img src="../public/logo.svg" alt="logo" class="header-logo">
+    <h2>My Favorite Movies</h2>
+  </header>
+  <div class="movies">
+    {{ movieStore.movies }}
+  </div>
+</template>
+
+<script>
+import { defineComponent } from 'vue';
+import { useMovieStore } from './stores/MovieStore';
+
+export default {
+  data(){
+    return {
+
+    }
+  },
+  methods: {
+    setup() {
+      const movieStore = useMovieStore();
+      return { movieStore };
+    }
+  } 
+};
+</script> -->
