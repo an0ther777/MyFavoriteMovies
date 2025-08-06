@@ -1,6 +1,6 @@
 <template>
     <div class="movie">
-        <img :src="`https://image.tmdb.org/t/p/w300_and_h450_bestv2${movie.poster_path}`"
+        <img :src="`${movie.poster_path}`"
         :alt="movie.original_title"
         class="movie-img">
         <div>
@@ -9,17 +9,18 @@
             </div>
             <span class="movie-overview">{{ movie.overview }}</span>
             <div class="movie-buttons">
-                <button class="movie-buttons-watched">
+                <button class="movie-buttons-watched" @click="movieStore.toggleWathched(movie.id)">
                     <span v-if="!movie.isWatched">Watched</span>
                     <span v-else>Unwatched</span>
                 </button>
-                <button class="movie-buttons-delete">Delete</button>
+                <button class="movie-buttons-delete" @click="movieStore.deleteMovie(movie.id)">Delete</button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { useMovieStore } from '../stores/MovieStore';
     export default {
         props: {
             movie: {
@@ -27,6 +28,10 @@
                 required: true,
                 default: () => {}
             }
+        },
+        setup() {
+          const movieStore = useMovieStore();
+          return { movieStore };
         }
     }
 </script>

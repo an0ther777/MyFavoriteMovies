@@ -1,22 +1,34 @@
 <template>
 <main>
+
   <header class="header">
     <img src="../public/logo.svg" alt="logo" class="header-logo">
     <h2>My Favorite Movies</h2>
   </header>
+
   <div class="tabs">
-      <button :class="['btn', { btn_green: movieStore.activeTab === 1 }]">
+      <button :class="['btn', { btn_green: movieStore.activeTab === 1 }]" @click="movieStore.setActiveTap(1)">
         Favorite
       </button>
-      <button :class="['btn', { btn_green: movieStore.activeTab === 2 }]">
+      <button :class="['btn', { btn_green: movieStore.activeTab === 2 }]" @click="movieStore.setActiveTap(2)">
         Search
       </button>
   </div>
+
   <div class="movies" v-if="movieStore.activeTab === 1">
-    <h3>All Movies</h3>
+
+    <div>
+      <h3>Wathched Movies - total: {{ movieStore.wathchMovies.length }}</h3>
+    <Movie v-for="movie of movieStore.wathchMovies" :key="movie.id" 
+    :movie='movie'/>
+    </div>
+
+    <h3>All Movies - total: {{ movieStore.totalMovies }}</h3> 
     <Movie v-for="movie of movieStore.movies" :key="movie.id" 
     :movie='movie'/>
+
   </div>
+
   <div class="search" v-else>Search</div>
 </main>
 </template>
