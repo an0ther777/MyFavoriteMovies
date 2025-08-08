@@ -29,17 +29,20 @@
 
   </div>
 
-  <div class="search" v-else>Search</div>
+  <div class="search" v-else>
+    <Search/>
+  </div>
 </main>
 </template>
 
 <script>
+import Search from './components/Search.vue';
 import Movie from './components/Movie.vue';
 import { defineComponent } from 'vue';
 import { useMovieStore } from './stores/MovieStore';
 
 export default defineComponent({
-  components: { Movie },
+  components: { Movie, Search },
   setup() {
     const movieStore = useMovieStore();
     return { movieStore };
