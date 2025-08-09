@@ -1,23 +1,30 @@
 <template>
-    <form @submit.prevent="searchStore.getMovies(searchMovie)">
-        <input type="text" class="search-input" 
-            placeholder="Input movie" v-model="searchMovie">
-    </form>
-    <h5>Если функционал отсутствует, значит, ссылка на список фильмов устарела</h5>
+  <form @submit.prevent="searchStore.getMovies(searchMovie)">
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Input movie"
+      v-model="searchMovie" />
+  </form>
+  <Loader v-if="searchStore.loader" />
+  <div v-else>
+    <Movie
+      v-for="movie of searchStore.movies"
+      :key="movie.id"
+      :movie="movie"
+      :is-search="true" />
+  </div>
+  <h5>There may be problems with the old API.</h5>
 </template>
 
-<script>
-import { ref } from 'vue'
-import { useSearchStore } from "../stores/SearchStore"
+<script setup>
+import Loader from "../components/Loader.vue";
+import Movie from "../components/Movie.vue";
+import { ref } from "vue";
+import { useSearchStore } from "../stores/SearchStore";
 
-export default {
-    setup() {
-        const searchMovie = ref('') // Исправлено название переменной
-        const searchStore = useSearchStore(); // Исправлено название функции
-
-        return { searchMovie, searchStore }; // Возвращаем обе переменные
-    }
-}
+const searchStore = useSearchStore();
+const searchMovie = ref("");
 </script>
 
 <style scoped>

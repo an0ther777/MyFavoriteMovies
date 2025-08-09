@@ -1,25 +1,32 @@
 import { defineStore } from "pinia";
+import { useMovieStore } from "./MovieStore";
+import { ref } from "vue";
 
-const url = "https://api.kinopoisk.dev/v1.4/movie/search?page=1&limit=10";
+const url =
+  "https:api.themoviedb.org/3/search/movie?api_key=02708c4929ad93aa5e68f8ee7bfa4445&query=";
 
-export const useSearchStore = defineStore("searchStore", {
-  state: () => ({
-    loader: false,
-    movies: [],
-  }),
-  actions: {
-    async getMovies(search) {
-      this.loader = true;
+export const useSearchStore = defineStore("searchStore", () => {
+  const loader = ref(false);
+  const movies = ref([]);
 
-      const res = await fetch(`${url}&token=D85R22X-HKHM5RZ-MK3AGW1-Z1J9PEJ&query=${encodeURIComponent(search)}, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }`);
+  const getMovies = async (search) => {
+    loader.value = true;
+    const res = await fetch(`${url}${search}`);
+    const data = await res.json();
+    movies.value = data.results;
+    loader.value = false;
+  };
 
-      const data = await res.json();
-      this.movies = data.docs; // Измените на data.docs, если это структура ответа API
-    },
-  },
+  const addToUserMovies = (object) => {
+    const movieStore = useMovieStore();
+    movieStore.movies.push({ ...object, isWatched: false });
+    movieStore.activeTab = 1;
+  };
+
+  return {
+    loader,
+    movies,
+    getMovies,
+    addToUserMovies,
+  };
 });

@@ -1,42 +1,59 @@
 <template>
-    <div class="movie">
-        <img :src="`${movie.poster_path}`"
-        :alt="movie.original_title"
-        class="movie-img">
-        <div>
-            <div class="movie-name">
-                {{ movie.original_title }} - {{ movie.release_date }}
-            </div>
-            <span class="movie-overview">{{ movie.overview }}</span>
-            <div class="movie-buttons">
-                <button class="movie-buttons-watched" @click="movieStore.toggleWathched(movie.id)">
-                    <span v-if="!movie.isWatched">Watched</span>
-                    <span v-else>Unwatched</span>
-                </button>
-                <button class="movie-buttons-delete" @click="movieStore.deleteMovie(movie.id)">Delete</button>
-            </div>
-        </div>
+  <div class="movie">
+    <img
+      :src="`https://image.tmdb.org/t/p/w300_and_h450_bestv2${movie.poster_path}`"
+      :alt="movie.original_title"
+      class="movie-img" />
+    <div>
+      <div class="movie-name">
+        {{ movie.original_title }} ({{ movie.release_date }})
+      </div>
+      <span class="movie-overview">{{ movie.overview }}</span>
+      <div class="movie-buttons" v-if="!isSearch">
+        <button
+          class="btn movie-buttons-watched"
+          @click="movieStore.toggleWatched(movie.id)">
+          <span v-if="!movie.isWatched">Watched</span>
+          <span v-else>Unwatched</span>
+        </button>
+        <button
+          class="btn movie-buttons-delete"
+          @click="movieStore.deleteMovie(movie.id)">
+          Delete
+        </button>
+      </div>
+      <div class="movie-buttons" v-else>
+        <button
+          class="btn btn_green"
+          @click="searchStore.addToUserMovies(movie)">
+          Add
+        </button>
+      </div>
     </div>
+  </div>
 </template>
 
-<script>
-import { useMovieStore } from '../stores/MovieStore';
-    export default {
-        props: {
-            movie: {
-                type: Object,
-                required: true,
-                default: () => {}
-            }
-        },
-        setup() {
-          const movieStore = useMovieStore();
-          return { movieStore };
-        }
-    }
+<script setup>
+import { useMovieStore } from "../stores/MovieStore";
+import { useSearchStore } from "../stores/SearchStore";
+
+const movieStore = useMovieStore();
+const searchStore = useSearchStore();
+const props = defineProps({
+  movie: {
+    type: Object,
+    required: true,
+    default: () => {},
+  },
+  isSearch: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+});
 </script>
 
-<style scoped>
+<style lang="css" scoped>
 .movie {
   display: grid;
   grid-template-columns: 200px 1fr;
@@ -76,20 +93,10 @@ import { useMovieStore } from '../stores/MovieStore';
   justify-content: center;
 }
 
-.movie-buttons-watched, .movie-buttons-delete {
-  border: 1.5px black solid;
-  border-radius: 4px;
-  padding: 10px;  
+.movie-buttons-watched {
   color: #fff;
   background: #1eb4c3;
-  transition: all 0.5s;
 }
-
-.movie-buttons-watched:hover, .movie-buttons-delete:hover {
-  cursor: pointer;
-  transform: scale(1.1);
-}
-
 
 .movie-buttons-watched__icon {
   width: 15px;
@@ -99,6 +106,5 @@ import { useMovieStore } from '../stores/MovieStore';
 .movie-buttons-delete {
   color: #fff;
   background: #ff2a2a;
-  margin-left: 20px;
 }
 </style>
